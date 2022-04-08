@@ -3,16 +3,16 @@ package textviewer;
  * @author CS 442 / CS 542
  */
 public class CenterModifier implements Modifier {
-	private static Modifier singleton; // singleton pattern
+	private static Modifier singleton; 
 	private CenterModifier(){}
 	public Block[][] modify(Block[][] blocks, int width) {
 		int i = 0;
 		int[] rowLengths = new int[blocks.length];
 		for (i = 0; i < blocks.length; i++) {
-			rowLengths[i] = blocks[i].length;
-			int len = 0;
-			for (int j = blocks[i].length; j > len; j++) {
-				rowLengths[i] -= blocks[i][j].getWidth();
+			rowLengths[i] = 0;
+			int len = blocks[i].length;
+			for (int j = 0; j < len; j++) {
+				rowLengths[i] += blocks[i][j].getWidth();
 			}
 			Block[] newRow = new Block[len + 1];
 			System.arraycopy(blocks[i],0,newRow,1,len);
@@ -20,7 +20,9 @@ public class CenterModifier implements Modifier {
 			blocks[i] = newRow;
 		}
 		for (i = 0; i < blocks.length; i++) {
-			blocks[i][0].setWidth(width - rowLengths[i]);
+			int halfLength = (width - rowLengths[i])/2;
+			blocks[i][0].setWidth(halfLength);
+			blocks[i][blocks[i].length - 1].setWidth(halfLength);
 		}
 		return blocks;
 	}
